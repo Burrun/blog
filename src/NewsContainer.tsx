@@ -65,7 +65,7 @@ function PageToolbar() {
   );
 }
 
-export default function PageContainerBasic(props: any) {
+export default function NewsContainer(props: any) {
   const router = useDemoRouter("/orders");
   const theme = useTheme();
 

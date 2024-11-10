@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import PageContainerBasic from "./Newstab.tsx";
+import NewsContainer from "./NewsContainer.tsx";
 function News() {
   return (
     <div>
-      <PageContainerBasic />
+      <NewsContainer />
     </div>
   );
 }

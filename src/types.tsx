@@ -1,6 +1,6 @@
 export interface Weather {
   location: string;
-  date: Date | null;
+  date: string | null;
   temperature: number | null;
   condition: string | undefined;
   wind: number | null;

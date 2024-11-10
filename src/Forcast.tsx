@@ -19,13 +19,13 @@ import "./Forcast.css";
 
 const exampleWeather: Weather = {
   location: "서울",
-  date: new Date("2023-10-01"),
+  date: "2023-10-01",
   temperature: 25,
-  condition: "sun",
+  condition: "rain",
   wind: 3,
   humidity: 50,
   precipitation: null,
-  uv: null,
+  uv: "위험",
 };
 
 function Forecast({ location }) {
@@ -46,6 +46,10 @@ function Forecast({ location }) {
       .catch((error) => console.error("Error fetching weather data:", error));
   };
   const fetchWeekWeather = (selectedDate) => {};
+
+  const handleCardClick = (dayWeather) => {
+    setWeather(dayWeather);
+  };
 
   const getWeatherImage = (condition) => {
     switch (condition) {
@@ -80,7 +84,7 @@ function Forecast({ location }) {
     <div className="forecast-container">
       <div className="today-weather">
         <h3>{location}</h3>
-        <h2>오늘의 날씨</h2>
+        <h2>{weather.date} 의 날씨</h2>
         {weather ? (
           <div className="weather-display">
             <img
@@ -123,7 +127,17 @@ function Forecast({ location }) {
       <div className="week-forecast">
         {weekWeather.map((dayWeather, i) => (
           <Grid key={i}>
-            <Card className="forecast-card">
+            <Card
+              className="forecast-card"
+              onClick={() => handleCardClick(dayWeather)}
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  transform: "scale(1.02)",
+                  transition: "transform 0.2s ease-in-out",
+                },
+              }}
+            >
               <CardMedia
                 component="img"
                 alt={dayWeather.condition}
@@ -145,5 +159,4 @@ function Forecast({ location }) {
     </div>
   );
 }
-
 export default Forecast;
