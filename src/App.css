@@ -1,18 +1,24 @@
-div {
-  box-sizing: border-box;
-}
-
-.list {
-  text-align: left;
-  padding-left: 20px;
-  border-bottom: 1px solid gray;
-}
-
-.black-nav {
-  background-color: black;
+.mint-nav {
+  display: flex;
+  background-color: rgb(100, 184, 184);
   color: white;
   padding: 20px;
   text-align: left;
   font-size: 30px;
   font-style: italic;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 100px;
+}
+
+.search-input {
+  margin-left: auto;
+}
+
+.tab {
+  width: 100%;
+  margin-left: 10px;
 }
