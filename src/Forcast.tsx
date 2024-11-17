@@ -14,14 +14,16 @@ import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import UmbrellaIcon from "@mui/icons-material/Umbrella";
-import WbCloudyIcon from "@mui/icons-material/WbSunny";
+import WbCloudyIcon from "@mui/icons-material/WbCloudy";
 import "./Forcast.css";
 
 const exampleWeather: Weather = {
   location: "서울",
   date: "2023-10-01",
   temperature: 25,
-  condition: "rain",
+  temperatureMin: 20,
+  temperatureMax: 30,
+  condition: "cloud",
   wind: 3,
   humidity: 50,
   precipitation: null,
@@ -55,36 +57,61 @@ function Forecast({ location }) {
     switch (condition) {
       case "rain":
         return "/assets/rain.png";
-      case "sky":
-        return "/assets/sky.png";
       case "snow":
         return "/assets/snowman.png";
       case "sun":
         return "/assets/sun.png";
+      case "cloud":
+        return "/assets/cloud.png";
       default:
         return "/assets/default.png";
     }
   };
   const renderWeatherIcon = (condition) => {
     switch (condition) {
-      case "맑음":
-        return <LightModeIcon className="weather-icon condition-icon" />;
-      case "흐림":
-        return <WbCloudyIcon className="weather-icon condition-icon" />;
-      case "눈":
-        return <AcUnitIcon className="weather-icon condition-icon" />;
-      case "비":
-        return <UmbrellaIcon className="weather-icon condition-icon" />;
+      case "sun":
+        return (
+          <LightModeIcon
+            className="weather-icon condition-icon"
+            sx={{ fontSize: "50px" }}
+          />
+        );
+      case "cloud":
+        return (
+          <WbCloudyIcon
+            className="weather-icon condition-icon"
+            sx={{ fontSize: "50px" }}
+          />
+        );
+      case "snow":
+        return (
+          <AcUnitIcon
+            className="weather-icon condition-icon"
+            sx={{ fontSize: "50px" }}
+          />
+        );
+      case "rain":
+        return (
+          <UmbrellaIcon
+            className="weather-icon condition-icon"
+            sx={{ fontSize: "50px" }}
+          />
+        );
       default:
-        return <LightModeIcon className="weather-icon condition-icon" />;
+        return (
+          <WbCloudyIcon
+            className="weather-icon condition-icon"
+            sx={{ fontSize: "50px" }}
+          />
+        );
     }
   };
 
   return (
     <div className="forecast-container">
       <div className="today-weather">
-        <h3>{location}</h3>
-        <h2>{weather.date} 의 날씨</h2>
+        <h2>{location}</h2>
+        <h3>{weather.date} 의 날씨</h3>
         {weather ? (
           <div className="weather-display">
             <img
@@ -92,13 +119,19 @@ function Forecast({ location }) {
               src={getWeatherImage(weather.condition)}
               alt={weather.condition}
             />
+            <div className="temperature-info">
+              <ThermostatIcon
+                className=" tempature-icon"
+                sx={{ fontSize: "50px" }}
+              />
+              <Typography className="weather-text">
+                {weather.temperature}°C
+              </Typography>
+              <Typography style={{ marginTop: 10, fontWeight: 400 }}>
+                {weather.temperatureMin} | {weather.temperatureMax}
+              </Typography>
+            </div>
             <div className="weather-info">
-              <div className="weather-item">
-                <ThermostatIcon className="weather-icon temperature-icon" />
-                <Typography className="weather-text temperature-text">
-                  {weather.temperature}°C
-                </Typography>
-              </div>
               <div className="weather-item">
                 {renderWeatherIcon(weather.condition)}
                 <Typography className="weather-text">
@@ -106,16 +139,29 @@ function Forecast({ location }) {
                 </Typography>
               </div>
               <div className="weather-item">
-                <AirIcon className="weather-icon wind-icon" />
+                <AirIcon
+                  className="weather-icon wind-icon"
+                  sx={{ fontSize: "50px" }}
+                />
                 <Typography className="weather-text">
                   {weather.wind} m/s
                 </Typography>
               </div>
               <div className="weather-item">
-                <WaterDropIcon className="weather-icon humidity-icon" />
+                <WaterDropIcon
+                  className="weather-icon humidity-icon"
+                  sx={{ fontSize: "50px" }}
+                />
                 <Typography className="weather-text">
                   {weather.humidity}%
                 </Typography>
+              </div>
+              <div className="weather-item">
+                <WaterDropIcon
+                  className="weather-icon humidity-icon"
+                  sx={{ fontSize: "50px" }}
+                />
+                <Typography className="weather-text">{weather.uv}</Typography>
               </div>
             </div>
           </div>

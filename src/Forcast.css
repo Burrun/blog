@@ -36,23 +36,37 @@
   padding: 10px;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.8);
+  margin-right: 10px;
 }
 
 .weather-info {
-  margin-left: 20px;
+  justify-content: space-around;
+}
+
+.temperature-info {
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .weather-item {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin: 20px;
 }
 
 .weather-icon {
-  margin-right: 8px;
+  margin-right: 16px;
 }
 
-.temperature-icon {
+.tempature-icon {
+  margin-top: 20px;
   color: #ff6b6b;
 }
 .condition-icon {
@@ -66,15 +80,10 @@
 }
 
 .weather-text {
-  font-family: "Raleway", sans-serif;
-  font-weight: 500;
-  color: #34495e;
-}
-
-.temperature-text {
   font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  font-size: 1.25rem;
+  font-weight: 400;
+  font-size: 2rem !important;
+  color: #34495e;
 }
 
 .week-forecast {
@@ -90,4 +99,8 @@
 
 .forecast-card:hover {
   transform: translateY(-5px);
+}
+
+.line {
+  border: #34495e 2px solid;
 }

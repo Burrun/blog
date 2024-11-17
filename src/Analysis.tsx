@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function Analysis() {
-  return <div style={{ border: "2px solid red" }}></div>;
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  return <div></div>;
 }
 
 export default Analysis;
