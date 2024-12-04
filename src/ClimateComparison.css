@@ -1,0 +1,9 @@
+.close-button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  float: right;
+  margin-bottom: 10px;
+}

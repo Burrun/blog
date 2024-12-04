@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-
+import Chart1 from "./Chart1.tsx";
+import { yellow } from "@mui/material/colors";
 function Analysis() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-  return <div></div>;
+  return (
+    <div style={{ border: "2px solid #ffd700" }}>
+      <Chart1 />
+    </div>
+  );
 }
 
 export default Analysis;

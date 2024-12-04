@@ -79,6 +79,10 @@
   color: #48dbf8;
 }
 
+.flair-icon {
+  color: crimson;
+}
+
 .weather-text {
   font-family: "Montserrat", sans-serif;
   font-weight: 400;

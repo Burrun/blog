@@ -1,24 +1,8 @@
-.mint-nav {
+.nav {
   display: flex;
-  background-color: rgb(100, 184, 184);
-  color: white;
+  background-color: rgb(228, 236, 236);
   padding: 20px;
-  text-align: left;
-  font-size: 30px;
   font-style: italic;
-}
-
-.nav-left {
-  display: flex;
   align-items: center;
-  gap: 100px;
-}
-
-.search-input {
-  margin-left: auto;
-}
-
-.tab {
-  width: 100%;
-  margin-left: 10px;
+  justify-content: space-between;
 }

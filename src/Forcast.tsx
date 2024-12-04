@@ -15,7 +15,9 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import UmbrellaIcon from "@mui/icons-material/Umbrella";
 import WbCloudyIcon from "@mui/icons-material/WbCloudy";
+import FlareIcon from "@mui/icons-material/Flare";
 import "./Forcast.css";
+import ClimateCountdown from "./CountDown.tsx";
 
 const exampleWeather: Weather = {
   location: "서울",
@@ -108,99 +110,105 @@ function Forecast({ location }) {
   };
 
   return (
-    <div className="forecast-container">
-      <div className="today-weather">
-        <h2>{location}</h2>
-        <h3>{weather.date} 의 날씨</h3>
-        {weather ? (
-          <div className="weather-display">
-            <img
-              className="weather-image"
-              src={getWeatherImage(weather.condition)}
-              alt={weather.condition}
-            />
-            <div className="temperature-info">
-              <ThermostatIcon
-                className=" tempature-icon"
-                sx={{ fontSize: "50px" }}
+    <div>
+      <ClimateCountdown />
+      <div className="forecast-container">
+        <div className="today-weather">
+          <h2>{location}</h2>
+          <h3>{weather.date} 의 날씨</h3>
+          {weather ? (
+            <div className="weather-display">
+              <img
+                className="weather-image"
+                src={getWeatherImage(weather.condition)}
+                alt={weather.condition}
               />
-              <Typography className="weather-text">
-                {weather.temperature}°C
-              </Typography>
-              <Typography style={{ marginTop: 10, fontWeight: 400 }}>
-                {weather.temperatureMin} | {weather.temperatureMax}
-              </Typography>
+              <div className="temperature-info">
+                <ThermostatIcon
+                  className=" tempature-icon"
+                  sx={{ fontSize: "50px" }}
+                />
+                <Typography className="weather-text">
+                  {weather.temperature}°C
+                </Typography>
+                <Typography style={{ marginTop: 10, fontWeight: 400 }}>
+                  {weather.temperatureMin} | {weather.temperatureMax}
+                </Typography>
+              </div>
+              <div className="weather-info">
+                <div className="weather-item">
+                  {renderWeatherIcon(weather.condition)}
+                  <Typography className="weather-text">
+                    {weather.condition}
+                  </Typography>
+                </div>
+                <div className="weather-item">
+                  <AirIcon
+                    className="weather-icon wind-icon"
+                    sx={{ fontSize: "50px" }}
+                  />
+                  <Typography className="weather-text">
+                    {weather.wind} m/s
+                  </Typography>
+                </div>
+                <div className="weather-item">
+                  <WaterDropIcon
+                    className="weather-icon humidity-icon"
+                    sx={{ fontSize: "50px" }}
+                  />
+                  <Typography className="weather-text">
+                    {weather.humidity}%
+                  </Typography>
+                </div>
+                <div className="weather-item">
+                  <FlareIcon
+                    className="weather-icon flair-icon"
+                    sx={{ fontSize: "50px" }}
+                  />
+                  <Typography className="weather-text">{weather.uv}</Typography>
+                </div>
+              </div>
             </div>
-            <div className="weather-info">
-              <div className="weather-item">
-                {renderWeatherIcon(weather.condition)}
-                <Typography className="weather-text">
-                  {weather.condition}
-                </Typography>
-              </div>
-              <div className="weather-item">
-                <AirIcon
-                  className="weather-icon wind-icon"
-                  sx={{ fontSize: "50px" }}
-                />
-                <Typography className="weather-text">
-                  {weather.wind} m/s
-                </Typography>
-              </div>
-              <div className="weather-item">
-                <WaterDropIcon
-                  className="weather-icon humidity-icon"
-                  sx={{ fontSize: "50px" }}
-                />
-                <Typography className="weather-text">
-                  {weather.humidity}%
-                </Typography>
-              </div>
-              <div className="weather-item">
-                <WaterDropIcon
-                  className="weather-icon humidity-icon"
-                  sx={{ fontSize: "50px" }}
-                />
-                <Typography className="weather-text">{weather.uv}</Typography>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <p>날씨 정보를 불러오는 중...</p>
-        )}
-      </div>
+          ) : (
+            <p>날씨 정보를 불러오는 중...</p>
+          )}
+        </div>
 
-      <div className="week-forecast">
-        {weekWeather.map((dayWeather, i) => (
-          <Grid key={i}>
-            <Card
-              className="forecast-card"
-              onClick={() => handleCardClick(dayWeather)}
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  transform: "scale(1.02)",
-                  transition: "transform 0.2s ease-in-out",
-                },
-              }}
-            >
-              <CardMedia
-                component="img"
-                alt={dayWeather.condition}
-                height="140"
-                image={getWeatherImage(dayWeather.condition)}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {dayWeather.condition}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  온도: {dayWeather.temperature}°C
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+        <div className="week-forecast">
+          {weekWeather.map((dayWeather, i) => (
+            <Grid key={i}>
+              <Card
+                className="forecast-card"
+                onClick={() => handleCardClick(dayWeather)}
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    transition: "transform 0.2s ease-in-out",
+                  },
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  alt={dayWeather.condition}
+                  height="140"
+                  image={getWeatherImage(dayWeather.condition)}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {dayWeather.condition}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {dayWeather.temperatureMin} | {dayWeather.temperatureMax} °C
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {dayWeather.date}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </div>
       </div>
     </div>
   );

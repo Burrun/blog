@@ -6,24 +6,34 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { Button, ButtonGroup, Autocomplete, TextField } from "@mui/material";
+import {
+  Button,
+  ButtonGroup,
+  Autocomplete,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Analysis from "./Analysis.tsx";
 import News from "./News.tsx";
 import Forcast from "./Forcast.tsx";
 import "./App.css";
 
 function App() {
-  let [locations, setLocations] = useState(["서울", "대전"]);
+  let [locations, setLocations] = useState(["서울", "대전", "대구"]);
   let [selectedLocation, setSelectedLocation] = useState(locations[0]);
 
   return (
     <Router>
       <div className="Web">
-        <div className="mint-nav">
-          <div>my Weather</div>
+        <div className="nav">
+          <div style={{ border: "1px solid" }}>
+            <Typography variant="h3" gutterBottom>
+              myWeather
+            </Typography>
+          </div>
           <div className="tab">
             <ButtonGroup
-              variant="contained"
+              variant="outlined"
               aria-label="Basic button group"
               color="success"
             >
@@ -38,7 +48,7 @@ function App() {
               </Button>
             </ButtonGroup>
           </div>
-          <div style={{ marginLeft: "auto" }}>
+          <div>
             <Autocomplete
               disablePortal
               options={locations}
@@ -53,6 +63,7 @@ function App() {
             />
           </div>
         </div>
+
         <div className="Fontent">
           <Routes>
             <Route path="/" element={<Navigate to="/forcast" />} />
