@@ -27,9 +27,7 @@ function App() {
       <div className="Web">
         <div className="nav">
           <div style={{ border: "1px solid" }}>
-            <Typography variant="h3" gutterBottom>
-              myWeather
-            </Typography>
+            <Typography variant="h3">myWeather</Typography>
           </div>
           <div className="tab">
             <ButtonGroup

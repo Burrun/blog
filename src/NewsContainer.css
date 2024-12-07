@@ -1,0 +1,7 @@
+#article-content {
+  white-space: pre-wrap;
+}
+
+#article-content p {
+  margin-bottom: 1em; /* 각 줄마다 여백 추가 */
+}
