@@ -1,16 +1,3 @@
-// Utils.tsx
-export const getDatesInRange = (startDate: Date, endDate: Date): Date[] => {
-  const dates: Date[] = [];
-  let currentDate = new Date(startDate);
-
-  while (currentDate <= endDate) {
-    dates.push(new Date(currentDate)); // 각 날짜를 배열에 추가
-    currentDate.setDate(currentDate.getDate() + 1); // 하루씩 증가
-  }
-
-  return dates;
-};
-
 export const fetchWeatherByDate = async (selectedDate: Date): Promise<any> => {
   try {
     // Date 객체를 "yyyymmdd" 형식의 문자열로 변환
@@ -29,50 +16,6 @@ export const fetchWeatherByDate = async (selectedDate: Date): Promise<any> => {
     console.error(err);
     return null;
   }
-};
-
-export const fetchWeatherInRange = async (startDate: Date, endDate: Date) => {
-  const datesInRange = getDatesInRange(startDate, endDate); // 날짜 범위 내의 날짜 배열을 얻음
-  const weatherData: any[] = [];
-
-  // 각 날짜에 대해 날씨 데이터를 가져와서 배열에 저장
-  for (const date of datesInRange) {
-    const weatherForDate = await fetchWeatherByDate(date);
-    if (weatherForDate) {
-      weatherData.push({
-        date: weatherForDate.date, // 날짜
-        av_temperature: weatherForDate.average_temperature, //평균 기온
-      });
-    }
-  }
-  return weatherData; // 가져온 날씨 데이터 반환
-};
-
-// 년도별 평균 온도 계산하는 함수
-export const getYearlyAverageTemperature = (weatherData: any[]) => {
-  const yearlyData: { [year: number]: number[] } = {};
-
-  // 날씨 데이터를 년도별로 그룹화하고 평균 기온을 계산
-  weatherData.forEach((entry) => {
-    const year = parseInt(entry.date.slice(0, 4), 10); // "yyyyMMdd" 형태에서 년도만 추출
-    const temperature = entry.av_temperature;
-
-    // 년도별로 배열을 생성하여 기온을 저장
-    if (!yearlyData[year]) {
-      yearlyData[year] = [];
-    }
-    yearlyData[year].push(temperature);
-  });
-
-  // 각 년도의 평균 온도 계산
-  const yearlyAverageTemperatures = Object.keys(yearlyData).map((year) => {
-    const temperatures = yearlyData[parseInt(year, 10)];
-    const avgTemperature =
-      temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length;
-    return { year: parseInt(year, 10), avg_temperature: avgTemperature };
-  });
-
-  return yearlyAverageTemperatures;
 };
 
 export const fetchSpecificDateAcrossYears = async (

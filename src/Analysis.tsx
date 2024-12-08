@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Chart1 from "./Chart1.tsx";
-import Chart2 from "./Chart2.tsx";
-import Chart3 from "./Chart3.tsx";
+import Chart2 from "./Chart2";
+import Chart3 from "./Chart3";
 import DatePicker from "./DatePicker.tsx";
 import { Button } from "@mui/material/";
 
 function Analysis() {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date>(new Date("2001-01-01"));
+  const [endDate, setEndDate] = useState<Date>(new Date("2001-01-01"));
   const [showChart, setShowChart] = useState(false);
   const handleStartDateChange = (newDate: Date) => {
     setStartDate(newDate);
@@ -74,12 +74,12 @@ function Analysis() {
         }}
       >
         <DatePicker
-          selectedDate={new Date("2001-01-01")}
+          selectedDate={startDate}
           onDateChange={handleStartDateChange}
           label={"시작 날짜"}
         />
         <DatePicker
-          selectedDate={new Date("2001-01-01")}
+          selectedDate={endDate}
           onDateChange={handleEndDateChange}
           label={"종료 날짜"}
         />
