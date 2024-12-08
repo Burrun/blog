@@ -6,9 +6,7 @@ export interface Weather {
   temperatureMin: number | null;
   condition: string | undefined;
   wind: number | null;
-  humidity: number | null;
   precipitation: number | null;
-  uv: string | null;
 }
 
 export interface Article {

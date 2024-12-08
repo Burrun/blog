@@ -15,41 +15,82 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import UmbrellaIcon from "@mui/icons-material/Umbrella";
 import WbCloudyIcon from "@mui/icons-material/WbCloudy";
-import FlareIcon from "@mui/icons-material/Flare";
 import ClimateCountdown from "./CountDown.tsx";
 import "./Forcast.css";
 
 const exampleWeather: Weather = {
   location: "서울",
-  date: "2023-10-01",
+  date: "2024-12-08",
   temperature: 25,
   temperatureMin: 20,
   temperatureMax: 30,
-  condition: "cloud",
+  condition: "sun",
   wind: 3,
-  humidity: 50,
-  precipitation: null,
-  uv: "위험",
+  precipitation: 50,
+};
+
+const ex1: Weather = {
+  location: "서울",
+  date: "2024-12-09",
+  temperature: null,
+  temperatureMin: -3,
+  temperatureMax: 5,
+  condition: "sun",
+  wind: 3,
+  precipitation: 20,
+};
+
+const ex2: Weather = {
+  location: "서울",
+  date: "2024-12-10",
+  temperature: null,
+  temperatureMin: -2,
+  temperatureMax: 3.5,
+  condition: "cloud",
+  wind: 5,
+  precipitation: 10,
+};
+
+const ex3: Weather = {
+  location: "서울",
+  date: "2024-12-11",
+  temperature: null,
+  temperatureMin: -3,
+  temperatureMax: 3,
+  condition: "cloud",
+  wind: 2,
+  precipitation: 20,
 };
 
 function Forecast({ location }) {
   const [date] = useState(new Date());
   const [weather, setWeather] = useState(exampleWeather);
-  const [weekWeather, setWeekWeather] = useState(Array(7).fill(exampleWeather));
+  const [temp, setTemp] = useState({ date: "", temperature: "" });
+  const [weekWeather, setWeekWeather] = useState([ex1, ex2, ex3]);
+
+  const fetchTodayWeather = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/get_weather");
+      if (!res.ok) {
+        throw new Error("날씨 데이터를 가져오는 데 실패했습니다.");
+      }
+      const jsn = await res.json();
+      setTemp(jsn || { date: "N/A", temperature: "N/A" }); // 기본값 설정
+      return jsn;
+    } catch (err) {
+      console.error(err);
+      setTemp({ date: "N/A", temperature: "N/A" }); // 에러 발생 시 기본값
+      return null;
+    }
+  };
 
   useEffect(() => {
-    fetchWeatherByDate(date); // 그날의 날씨 정보를 가져옴
-    fetchWeekWeather(date); //그 주의 날씨 정보를 가져옴
-  }, [date]);
+    const fetchData = async () => {
+      await fetchTodayWeather();
+    };
 
-  const fetchWeatherByDate = (selectedDate) => {
-    const formattedDate = selectedDate.toISOString().split("T")[0]; // 날짜를 'YYYY-MM-DD' 형식으로 변환
-    fetch(`https://api.example.com/weather?date=${formattedDate}`)
-      .then((response) => response.json())
-      .then((data) => setWeather(data))
-      .catch((error) => console.error("Error fetching weather data:", error));
-  };
-  const fetchWeekWeather = (selectedDate) => {};
+    fetchData();
+  }, [date]);
 
   const handleCardClick = (dayWeather) => {
     setWeather(dayWeather);
@@ -109,12 +150,23 @@ function Forecast({ location }) {
     }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "날짜 정보 없음"; // temp.date가 null이거나 undefined일 경우 대비
+
+    const year = dateString.slice(0, 4); // 연도
+    const month = dateString.slice(4, 6); // 월
+    const day = dateString.slice(6, 8); // 일
+    const hour = dateString.slice(8, 10); // 시
+
+    return `${year}년 ${month}월 ${day}일 ${hour}시`;
+  };
+
   return (
     <div className="forecast-container">
       <ClimateCountdown />
       <div className="today-weather">
         <h2>{location}</h2>
-        <h3>{weather.date} 의 날씨</h3>
+        <h3> {formatDate(temp.date)}의 날씨</h3>
         {weather ? (
           <div className="weather-display">
             <img
@@ -128,10 +180,10 @@ function Forecast({ location }) {
                 sx={{ fontSize: "50px" }}
               />
               <Typography className="weather-text">
-                {weather.temperature}°C
+                {temp.temperature}°C
               </Typography>
               <Typography style={{ marginTop: 10, fontWeight: 400 }}>
-                {weather.temperatureMin} | {weather.temperatureMax}
+                {Number(temp.temperature)} | {Number(temp.temperature) + 2.1}
               </Typography>
             </div>
             <div className="weather-info">
@@ -156,15 +208,8 @@ function Forecast({ location }) {
                   sx={{ fontSize: "50px" }}
                 />
                 <Typography className="weather-text">
-                  {weather.humidity}%
+                  {weather.precipitation}%
                 </Typography>
-              </div>
-              <div className="weather-item">
-                <FlareIcon
-                  className="weather-icon flair-icon"
-                  sx={{ fontSize: "50px" }}
-                />
-                <Typography className="weather-text">{weather.uv}</Typography>
               </div>
             </div>
           </div>

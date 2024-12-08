@@ -53,7 +53,12 @@ function Analysis() {
 
   // 버튼 클릭 시 차트를 표시하도록 설정
   const handleButtonClick = () => {
-    setShowChart(true);
+    if (startDate && endDate) {
+      setShowChart(true); // 날짜가 모두 설정되면 차트를 표시
+    } else {
+      setShowChart(false); // 날짜가 설정되지 않으면 차트를 표시하지 않음
+      alert("시작 날짜와 종료 날짜를 모두 선택해주세요.");
+    }
   };
 
   return (
@@ -69,12 +74,12 @@ function Analysis() {
         }}
       >
         <DatePicker
-          selectedDate={new Date()}
+          selectedDate={new Date("2001-01-01")}
           onDateChange={handleStartDateChange}
           label={"시작 날짜"}
         />
         <DatePicker
-          selectedDate={new Date()}
+          selectedDate={new Date("2001-01-01")}
           onDateChange={handleEndDateChange}
           label={"종료 날짜"}
         />
@@ -87,7 +92,7 @@ function Analysis() {
           찾기
         </Button>
       </div>
-      {showChart && (
+      {startDate && endDate && showChart && (
         <div
           className="Chart"
           style={{

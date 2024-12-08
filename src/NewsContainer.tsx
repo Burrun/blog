@@ -7,6 +7,7 @@ export default function NewsContainer() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [message, setMessage] = useState("");
 
   //모든 기사 가져오기
   const fetchArticles = async () => {
@@ -43,6 +44,17 @@ export default function NewsContainer() {
     setLoading(false);
   };
 
+  //기사 업데이트
+  const updateArticle = async () => {
+    try {
+      await fetch("http://localhost:8080/article/update");
+      setMessage("완료됐습니다!");
+    } catch (err) {
+      console.error(err);
+      setMessage("업데이트 중 오류가 발생했습니다.");
+    }
+  };
+
   // 모달 열기 및 개별 기사 로드
   const handleOpen = async (index) => {
     setOpen(true);
@@ -65,17 +77,11 @@ export default function NewsContainer() {
   return (
     <div>
       <div className="tag" style={{ padding: "5px" }}>
-        <Stack direction="row" spacing={1}>
-          <Button variant="outlined" color="success">
-            원문 보기{" "}
-          </Button>
-          <Button variant="outlined" color="success">
-            번역본 보기
-          </Button>
-          <Button variant="outlined" color="success">
+        <div style={{ padding: "1rem" }}>
+          <Button variant="contained" color="success" onClick={updateArticle}>
             갱신하기
           </Button>
-        </Stack>
+        </div>
       </div>
       <Stack spacing={3}>
         {articles.map((article, index) => (
