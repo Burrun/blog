@@ -1,3 +1,19 @@
+import { ForecastData } from "./types.tsx";
+
+export const fetchTodayWeather = async () => {
+  try {
+    const res = await fetch("http://localhost:5000/api/get_weather");
+    if (!res.ok) {
+      throw new Error("날씨 데이터를 가져오는 데 실패했습니다.");
+    }
+    const jsn = await res.json();
+    return jsn;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
 export const fetchWeatherByDate = async (selectedDate: Date): Promise<any> => {
   try {
     // Date 객체를 "yyyymmdd" 형식의 문자열로 변환
@@ -17,6 +33,20 @@ export const fetchWeatherByDate = async (selectedDate: Date): Promise<any> => {
     return null;
   }
 };
+
+export const fetchForecast = async () => {
+  try {
+    const res = await fetch(`http://localhost:5000/api/get_forecast`);
+    const jsn = await res.json();
+    return jsn;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+
+// 이부분 수정 (jsn 구조가 forcast , temperature, date,  강수확률로 되어있음)
+//이걸 (condition, tempature, date, rainPer)로 바꿔야함
 
 export const fetchSpecificDateAcrossYears = async (
   startDate: Date,

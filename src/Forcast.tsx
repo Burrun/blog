@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Weather } from "./types.js";
+import { Weather, ForecastData } from "./types.js";
 import {
   Card,
   CardMedia,
@@ -16,6 +16,7 @@ import AcUnitIcon from "@mui/icons-material/AcUnit";
 import UmbrellaIcon from "@mui/icons-material/Umbrella";
 import WbCloudyIcon from "@mui/icons-material/WbCloudy";
 import ClimateCountdown from "./CountDown.tsx";
+import { fetchTodayWeather, fetchForecast } from "./Utils.tsx";
 import "./Forcast.css";
 
 const exampleWeather: Weather = {
@@ -24,87 +25,47 @@ const exampleWeather: Weather = {
   temperature: 25,
   temperatureMin: 20,
   temperatureMax: 30,
-  condition: "sun",
+  condition: "맑음",
   wind: 3,
   precipitation: 50,
 };
 
-const ex1: Weather = {
-  location: "서울",
-  date: "2024-12-09",
-  temperature: null,
-  temperatureMin: -3,
-  temperatureMax: 5,
-  condition: "sun",
-  wind: 3,
-  precipitation: 20,
-};
-
-const ex2: Weather = {
-  location: "서울",
-  date: "2024-12-10",
-  temperature: null,
-  temperatureMin: -2,
-  temperatureMax: 3.5,
-  condition: "cloud",
-  wind: 5,
-  precipitation: 10,
-};
-
-const ex3: Weather = {
-  location: "서울",
-  date: "2024-12-11",
-  temperature: null,
-  temperatureMin: -3,
-  temperatureMax: 3,
-  condition: "cloud",
-  wind: 2,
-  precipitation: 20,
-};
-
 function Forecast({ location }) {
   const [date] = useState(new Date());
-  const [weather, setWeather] = useState(exampleWeather);
-  const [temp, setTemp] = useState({ date: "", temperature: "" });
-  const [weekWeather, setWeekWeather] = useState([ex1, ex2, ex3]);
+  const [todayWeather, setTodayWeather] = useState(exampleWeather);
+  const [weekWeather, setWeekWeather] = useState<ForecastData | null>(null);
 
-  const fetchTodayWeather = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/get_weather");
-      if (!res.ok) {
-        throw new Error("날씨 데이터를 가져오는 데 실패했습니다.");
-      }
-      const jsn = await res.json();
-      setTemp(jsn || { date: "N/A", temperature: "N/A" }); // 기본값 설정
-      return jsn;
-    } catch (err) {
-      console.error(err);
-      setTemp({ date: "N/A", temperature: "N/A" }); // 에러 발생 시 기본값
-      return null;
-    }
-  };
+  const filteredForecast =
+    weekWeather &&
+    Array.isArray(weekWeather.forecast) &&
+    weekWeather.forecast.filter((_, index) => index >= 1 && index <= 7);
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchTodayWeather();
+      try {
+        const result = await fetchTodayWeather();
+        const weekResult = await fetchForecast();
+        setTodayWeather(result);
+        setWeekWeather(weekResult);
+
+        console.log("week : ", weekResult);
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     fetchData();
   }, [date]);
 
-  const handleCardClick = (dayWeather) => {
-    setWeather(dayWeather);
-  };
-
   const getWeatherImage = (condition) => {
     switch (condition) {
-      case "rain":
+      case "흐림":
         return "/assets/rain.png";
-      case "snow":
+      case "눈":
         return "/assets/snowman.png";
-      case "sun":
+      case "맑음":
         return "/assets/sun.png";
-      case "cloud":
+      case "구름많음":
         return "/assets/cloud.png";
       default:
         return "/assets/default.png";
@@ -166,13 +127,13 @@ function Forecast({ location }) {
       <ClimateCountdown />
       <div className="today-weather">
         <h2>{location}</h2>
-        <h3> {formatDate(temp.date)}의 날씨</h3>
-        {weather ? (
+        <h3> {formatDate(todayWeather.date)}의 날씨</h3>
+        {todayWeather ? (
           <div className="weather-display">
             <img
               className="weather-image"
-              src={getWeatherImage(weather.condition)}
-              alt={weather.condition}
+              src={getWeatherImage(todayWeather.condition)}
+              alt={todayWeather.condition}
             />
             <div className="temperature-info">
               <ThermostatIcon
@@ -180,35 +141,28 @@ function Forecast({ location }) {
                 sx={{ fontSize: "50px" }}
               />
               <Typography className="weather-text">
-                {temp.temperature}°C
+                {todayWeather.temperature}°C
               </Typography>
               <Typography style={{ marginTop: 10, fontWeight: 400 }}>
-                {Number(temp.temperature)} | {Number(temp.temperature) + 2.1}
+                {(Number(todayWeather.temperature) - 2).toFixed(1)} |{" "}
+                {(Number(todayWeather.temperature) + 2.1).toFixed(1)}
               </Typography>
             </div>
             <div className="weather-info">
               <div className="weather-item">
-                {renderWeatherIcon(weather.condition)}
+                {renderWeatherIcon(exampleWeather.condition)}
                 <Typography className="weather-text">
-                  {weather.condition}
+                  {exampleWeather.condition}
                 </Typography>
               </div>
-              <div className="weather-item">
-                <AirIcon
-                  className="weather-icon wind-icon"
-                  sx={{ fontSize: "50px" }}
-                />
-                <Typography className="weather-text">
-                  {weather.wind} m/s
-                </Typography>
-              </div>
+
               <div className="weather-item">
                 <WaterDropIcon
                   className="weather-icon humidity-icon"
                   sx={{ fontSize: "50px" }}
                 />
                 <Typography className="weather-text">
-                  {weather.precipitation}%
+                  {exampleWeather.precipitation}%
                 </Typography>
               </div>
             </div>
@@ -219,39 +173,42 @@ function Forecast({ location }) {
       </div>
 
       <div className="week-forecast">
-        {weekWeather.map((dayWeather, i) => (
-          <Grid key={i}>
-            <Card
-              className="forecast-card"
-              onClick={() => handleCardClick(dayWeather)}
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  transform: "scale(1.02)",
-                  transition: "transform 0.2s ease-in-out",
-                },
-              }}
-            >
-              <CardMedia
-                component="img"
-                alt={dayWeather.condition}
-                height="140"
-                image={getWeatherImage(dayWeather.condition)}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {dayWeather.condition}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {dayWeather.temperatureMin} | {dayWeather.temperatureMax} °C
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {dayWeather.date}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+        {filteredForecast &&
+          filteredForecast.map((dayWeather: any, i: number) => (
+            <Grid key={i}>
+              <Card
+                className="forecast-card"
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    transition: "transform 0.2s ease-in-out",
+                  },
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  alt={dayWeather.forecast}
+                  height="140"
+                  image={getWeatherImage(dayWeather.forecast)}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {dayWeather.forecast}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {dayWeather.temperature}°C
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {dayWeather.time}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    강수확률 {dayWeather.강수확률}%
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
       </div>
     </div>
   );
