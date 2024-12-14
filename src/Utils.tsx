@@ -81,3 +81,40 @@ export const fetchSpecificDateAcrossYears = async (
   console.log("배열: ", specificDateTemperatures);
   return specificDateTemperatures; // 수집된 특정 날짜 데이터 반환
 };
+
+export const fetchYearlyWeatherData = async (year: number) => {
+  const yearlyWeatherData: { date: string; temperature: number }[] = [];
+
+  try {
+    // 1월 1일부터 12월 31일까지 날짜 생성
+    const startDate = new Date(year, 0, 1); // 1월은 0
+    const endDate = new Date(year, 11, 31); // 12월은 11
+
+    // 날짜 범위의 모든 날짜를 반복
+    let currentDate = startDate;
+    while (currentDate <= endDate) {
+      try {
+        // 각 날짜에 대해 데이터를 가져오는 fetchWeatherByDate 호출
+        const weatherData = await fetchWeatherByDate(currentDate);
+        if (weatherData) {
+          yearlyWeatherData.push({
+            date: weatherData.date, // yyyy-MM-dd
+            temperature: weatherData.average_temperature, // 평균 온도
+          });
+        }
+      } catch (error) {
+        console.error(
+          `Error fetching data for ${currentDate.toISOString()}:`,
+          error
+        );
+      }
+
+      // 다음 날짜로 이동
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  } catch (error) {
+    console.error(`Error fetching yearly data for year ${year}:`, error);
+  }
+
+  return yearlyWeatherData;
+};

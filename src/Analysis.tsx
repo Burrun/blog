@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Chart1 from "./Chart1.tsx";
-import Chart2 from "./Chart2";
-import Chart3 from "./Chart3";
+import Chart2 from "./Chart2.tsx";
+import Chart3 from "./Chart3.tsx";
 import DatePicker from "./DatePicker.tsx";
 import { Button } from "@mui/material/";
 
@@ -106,6 +106,7 @@ function Analysis() {
           }}
         >
           <Chart1 startDate={startDate} endDate={endDate} />
+          <Chart2 startDate={startDate} endDate={endDate} />
         </div>
       )}
     </div>
